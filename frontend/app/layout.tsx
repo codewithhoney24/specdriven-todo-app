@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: 'BetterTasks - AI-Powered Todo Platform',
   description: 'A modern, secure, and animated task management platform',
   icons: {
-    icon: '/icon.svg',
+    icon: '/favicon.ico',
   },
 };
 
