@@ -30,7 +30,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'auth-token') {
         // When auth token is added/removed from localStorage, refetch session
-        refetch();
+        // Add a small delay to ensure the token is properly updated in localStorage
+        setTimeout(() => {
+          refetch();
+        }, 100);
       }
     };
 
