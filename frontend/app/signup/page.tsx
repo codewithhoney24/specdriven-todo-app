@@ -205,10 +205,11 @@ export default function SignupPage() {
       // Refetch the session to update the auth state
       await refetch();
 
-      // Small delay to ensure auth state is updated before redirect
-      await new Promise(resolve => setTimeout(resolve, 300));
+      // Wait a bit longer to ensure auth state is fully updated
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-      router.push('/dashboard');
+      // Force a window reload to ensure all contexts are updated with the new user
+      window.location.href = '/dashboard';
     }
   };
 
