@@ -159,6 +159,7 @@ export const authAPI = {
   async getCurrentUser(): Promise<User | null> {
     const token = localStorage.getItem('auth-token');
     if (!token) {
+      console.log('No auth token found in localStorage');
       return null;
     }
 
@@ -192,6 +193,9 @@ export const authAPI = {
         } else {
           // If backend call fails, fall back to decoding the token
           console.warn('Failed to fetch user from backend, falling back to token');
+          console.warn('Response status:', response.status);
+          const errorText = await response.text();
+          console.warn('Response error text:', errorText);
         }
       } catch (fetchError) {
         // If fetch fails completely (network error, etc.), fall back to decoding the token
