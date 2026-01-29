@@ -1,0 +1,220 @@
+
+# Subtask Routes
+from models import Subtask
+
+class SubtaskCreate(BaseModel):
+    """Request model for creating a subtask."""
+    title: str
+    completed: bool = False
+
+class SubtaskUpdate(BaseModel):
+    """Request model for updating a subtask."""
+    title: Optional[str] = None
+    completed: Optional[bool] = None
+
+class SubtaskResponse(BaseModel):
+    """Response model for a subtask."""
+    id: int
+    task_id: int
+    title: str
+    completed: bool
+    created_at: datetime
+    updated_at: datetime
+
+@router.post("/{user_id}/tasks/{task_id}/subtasks", response_model=SubtaskResponse, status_code=status.HTTP_201_CREATED)
+def create_subtask(
+    user_id: str,
+    task_id: int,
+    subtask_data: SubtaskCreate,
+    current_user_id: str = Depends(verify_token)
+):
+    """
+    Create a new subtask for the specified task.
+
+    Args:
+        user_id: The ID of the user who owns the parent task
+        task_id: The ID of the parent task
+        subtask_data: Subtask creation data
+        current_user_id: The ID of the authenticated user (from token)
+
+    Returns:
+        SubtaskResponse: Created subtask
+    """
+    # Verify that the user_id matches the authenticated user_id
+    if user_id != current_user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied: Cannot create subtasks for another user's task"
+        )
+
+    # Verify that the task belongs to the user
+    with Session(engine) as session:
+        task = session.exec(select(Task).where(Task.id == task_id).where(Task.user_id == user_id)).first()
+        if not task:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Task not found or does not belong to user"
+            )
+
+        # Create subtask instance
+        subtask = Subtask(
+            title=subtask_data.title,
+            completed=subtask_data.completed,
+            task_id=task_id
+        )
+
+        session.add(subtask)
+        session.commit()
+        session.refresh(subtask)
+
+    return subtask
+
+@router.get("/{user_id}/tasks/{task_id}/subtasks", response_model=List[SubtaskResponse])
+def get_subtasks(
+    user_id: str,
+    task_id: int,
+    current_user_id: str = Depends(verify_token)
+):
+    """
+    Get all subtasks for the specified task.
+
+    Args:
+        user_id: The ID of the user who owns the parent task
+        task_id: The ID of the parent task
+        current_user_id: The ID of the authenticated user (from token)
+
+    Returns:
+        List[SubtaskResponse]: List of subtasks for the task
+    """
+    # Verify that the user_id matches the authenticated user_id
+    if user_id != current_user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied: Cannot access another user's task subtasks"
+        )
+
+    # Verify that the task belongs to the user
+    with Session(engine) as session:
+        task = session.exec(select(Task).where(Task.id == task_id).where(Task.user_id == user_id)).first()
+        if not task:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Task not found or does not belong to user"
+            )
+
+        # Query subtasks for the task
+        statement = select(Subtask).where(Subtask.task_id == task_id)
+        subtasks = session.exec(statement).all()
+
+    return subtasks
+
+@router.put("/{user_id}/tasks/{task_id}/subtasks/{subtask_id}", response_model=SubtaskResponse)
+def update_subtask(
+    user_id: str,
+    task_id: int,
+    subtask_id: int,
+    subtask_data: SubtaskUpdate,
+    current_user_id: str = Depends(verify_token)
+):
+    """
+    Update an existing subtask for the specified task.
+
+    Args:
+        user_id: The ID of the user who owns the parent task
+        task_id: The ID of the parent task
+        subtask_id: The ID of the subtask to update
+        subtask_data: Subtask update data
+        current_user_id: The ID of the authenticated user (from token)
+
+    Returns:
+        SubtaskResponse: Updated subtask
+    """
+    # Verify that the user_id matches the authenticated user_id
+    if user_id != current_user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied: Cannot update another user's subtask"
+        )
+
+    # Verify that the task belongs to the user and the subtask belongs to the task
+    with Session(engine) as session:
+        task = session.exec(select(Task).where(Task.id == task_id).where(Task.user_id == user_id)).first()
+        if not task:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Task not found or does not belong to user"
+            )
+
+        subtask = session.exec(
+            select(Subtask).where(Subtask.id == subtask_id).where(Subtask.task_id == task_id)
+        ).first()
+
+        if not subtask:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Subtask not found or does not belong to the specified task"
+            )
+
+        # Update subtask fields if provided
+        update_data = subtask_data.dict(exclude_unset=True)
+        for field, value in update_data.items():
+            setattr(subtask, field, value)
+
+        # Update the updated_at timestamp
+        subtask.updated_at = datetime.now(timezone.utc)
+
+        session.add(subtask)
+        session.commit()
+        session.refresh(subtask)
+
+    return subtask
+
+@router.delete("/{user_id}/tasks/{task_id}/subtasks/{subtask_id}")
+def delete_subtask(
+    user_id: str,
+    task_id: int,
+    subtask_id: int,
+    current_user_id: str = Depends(verify_token)
+):
+    """
+    Delete a specific subtask for the specified task.
+
+    Args:
+        user_id: The ID of the user who owns the parent task
+        task_id: The ID of the parent task
+        subtask_id: The ID of the subtask to delete
+        current_user_id: The ID of the authenticated user (from token)
+
+    Returns:
+        dict: Success message
+    """
+    # Verify that the user_id matches the authenticated user_id
+    if user_id != current_user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied: Cannot delete another user's subtask"
+        )
+
+    # Verify that the task belongs to the user and the subtask belongs to the task
+    with Session(engine) as session:
+        task = session.exec(select(Task).where(Task.id == task_id).where(Task.user_id == user_id)).first()
+        if not task:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Task not found or does not belong to user"
+            )
+
+        subtask = session.exec(
+            select(Subtask).where(Subtask.id == subtask_id).where(Subtask.task_id == task_id)
+        ).first()
+
+        if not subtask:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Subtask not found or does not belong to the specified task"
+            )
+
+        session.delete(subtask)
+        session.commit()
+
+    return {"message": "Subtask deleted successfully"}

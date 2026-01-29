@@ -1,0 +1,64 @@
+from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
+from routes import auth, tasks
+from middleware.auth import verify_token
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
+
+# Import models to register them with SQLModel
+from models import Task, Subtask
+
+# Create FastAPI app instance
+app = FastAPI(title="Todo Application API", version="1.0.0")
+
+# Initialize the database
+from sqlmodel import SQLModel
+from db import engine
+SQLModel.metadata.create_all(bind=engine)
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://specdriven-todo-app-653i.vercel.app",  # Your Vercel deployment
+        "https://specdriven-todo-app.vercel.app",       # Alternative Vercel deployment
+        "https://specdriven-todo-app-7sei.vercel.app",  # Another Vercel deployment (from your error)
+        "http://localhost:3000",  # Local development
+        "http://localhost:3001",  # Alternative local dev port
+        "http://localhost:8000",  # Local backend for testing
+        "http://127.0.0.1:3000",  # Alternative local dev
+        "http://127.0.0.1:3001",  # Alternative local dev
+        "https://vercel.app",     # General Vercel domain
+        "*"  # Allow all origins for local development (be cautious in production)
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include routers
+app.include_router(auth.router, prefix="/api", tags=["authentication"])
+app.include_router(tasks.router, prefix="/api", tags=["tasks"])
+
+@app.get("/")
+def read_root():
+    """
+    Root endpoint for the API.
+    
+    Returns:
+        dict: Welcome message
+    """
+    return {"message": "Welcome to the Todo Application API"}
+
+@app.get("/health")
+def health_check():
+    """
+    Health check endpoint.
+    
+    Returns:
+        dict: Health status
+    """
+    return {"status": "healthy"}
