@@ -117,6 +117,10 @@ export default function LoginPage() {
       setError(result.error.message || "Login failed. Check your credentials.");
       setLoading(false);
     } else {
+      // Clear any old auth data before setting up new session
+      localStorage.removeItem('auth-token');
+      sessionStorage.clear();
+
       // Store the token in localStorage if not already stored by the auth API
       if (result.token) {
         localStorage.setItem('auth-token', result.token);

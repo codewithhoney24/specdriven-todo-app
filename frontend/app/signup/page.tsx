@@ -185,6 +185,10 @@ export default function SignupPage() {
       setError(result.error.message || "Signup failed. Please try again.");
       setLoading(false);
     } else {
+      // Clear any old auth data before setting up new session
+      localStorage.removeItem('auth-token');
+      sessionStorage.clear();
+
       // After successful signup, we need to log the user in
       // Call the login API to get the authentication token
       const loginResult = await authClient.signIn({
