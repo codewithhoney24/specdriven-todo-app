@@ -103,9 +103,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const handleLogout = async () => {
     try {
       await signOut(); // This should already clear the token
-      // Explicitly clear the token again to ensure it's removed
+      // Explicitly clear all auth-related data to ensure complete logout
       localStorage.removeItem('auth-token');
       console.log('Auth token cleared during logout');
+
+      // Reset auth state to ensure no user data persists
       setAuthState({
         user: null,
         loading: false,
@@ -113,6 +115,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         logout: handleLogout,
         refetch: () => Promise.resolve()
       });
+
+      // Dispatch auth-error event to notify other parts of the app
+      window.dispatchEvent(new Event('auth-error'));
     } catch (error) {
       console.error('Logout error:', error);
     }
