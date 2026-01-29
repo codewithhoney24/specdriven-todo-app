@@ -185,6 +185,19 @@ export default function SignupPage() {
       setError(result.error.message || "Signup failed. Please try again.");
       setLoading(false);
     } else {
+      // After successful signup, we need to log the user in
+      // Call the login API to get the authentication token
+      const loginResult = await authClient.signIn({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (loginResult.error) {
+        setError(loginResult.error.message || "Login failed after signup. Please try logging in manually.");
+        setLoading(false);
+        return;
+      }
+
       // Refetch the session to update the auth state
       await refetch();
 
