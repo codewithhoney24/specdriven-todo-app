@@ -52,21 +52,12 @@ const apiService = {
     getAll: async (userId?: string) => {
       const token = await getTokenWithDelay();
 
-      // Get user ID from token if not provided
-      let effectiveUserId = userId;
-      if (!effectiveUserId) {
-        const tokenUserId = getUserIdFromToken();
-        if (!tokenUserId) {
-          throw new Error('User ID is required to get tasks');
-        }
-        effectiveUserId = tokenUserId;
-      }
-
-      // Ensure userId is properly formatted (trim any whitespace)
-      if (!effectiveUserId) {
+      // Always get user ID from token to ensure we're accessing the correct user's data
+      const tokenUserId = getUserIdFromToken();
+      if (!tokenUserId) {
         throw new Error('User ID is required to get tasks');
       }
-      const cleanUserId = effectiveUserId.trim();
+      const cleanUserId = tokenUserId.trim();
 
       console.log('Making API call to get tasks for user:', cleanUserId); // Debug log
       console.log('Using token:', token ? 'Present' : 'Missing'); // Debug log
@@ -90,21 +81,12 @@ const apiService = {
     getById: async (id: number, userId?: string) => {
       const token = await getTokenWithDelay();
 
-      // Get user ID from token if not provided
-      let effectiveUserId = userId;
-      if (!effectiveUserId) {
-        const tokenUserId = getUserIdFromToken();
-        if (!tokenUserId) {
-          throw new Error('User ID is required to get a task');
-        }
-        effectiveUserId = tokenUserId;
-      }
-
-      // Ensure userId is properly formatted (trim any whitespace)
-      if (!effectiveUserId) {
+      // Always get user ID from token to ensure we're accessing the correct user's data
+      const tokenUserId = getUserIdFromToken();
+      if (!tokenUserId) {
         throw new Error('User ID is required to get a task');
       }
-      const cleanUserId = effectiveUserId.trim();
+      const cleanUserId = tokenUserId.trim();
 
       if (!token) {
         throw new Error('Authentication token is missing. Please log in again.');
@@ -124,21 +106,12 @@ const apiService = {
     create: async (taskData: Partial<Task>, userId?: string) => {
       const token = await getTokenWithDelay();
 
-      // Get user ID from token if not provided
-      let effectiveUserId = userId;
-      if (!effectiveUserId) {
-        const tokenUserId = getUserIdFromToken();
-        if (!tokenUserId) {
-          throw new Error('User ID is required to create a task');
-        }
-        effectiveUserId = tokenUserId;
-      }
-
-      // Ensure userId is properly formatted (trim any whitespace)
-      if (!effectiveUserId) {
+      // Always get user ID from token to ensure we're accessing the correct user's data
+      const tokenUserId = getUserIdFromToken();
+      if (!tokenUserId) {
         throw new Error('User ID is required to create a task');
       }
-      const cleanUserId = effectiveUserId.trim();
+      const cleanUserId = tokenUserId.trim();
 
       if (!token) {
         throw new Error('Authentication token is missing. Please log in again.');
@@ -158,21 +131,12 @@ const apiService = {
     update: async (id: number, taskData: Partial<Task>, userId?: string) => {
       const token = await getTokenWithDelay();
 
-      // Get user ID from token if not provided
-      let effectiveUserId = userId;
-      if (!effectiveUserId) {
-        const tokenUserId = getUserIdFromToken();
-        if (!tokenUserId) {
-          throw new Error('User ID is required to update a task');
-        }
-        effectiveUserId = tokenUserId;
-      }
-
-      // Ensure userId is properly formatted (trim any whitespace)
-      if (!effectiveUserId) {
+      // Always get user ID from token to ensure we're accessing the correct user's data
+      const tokenUserId = getUserIdFromToken();
+      if (!tokenUserId) {
         throw new Error('User ID is required to update a task');
       }
-      const cleanUserId = effectiveUserId.trim();
+      const cleanUserId = tokenUserId.trim();
 
       if (!token) {
         throw new Error('Authentication token is missing. Please log in again.');
@@ -192,21 +156,12 @@ const apiService = {
     delete: async (id: number, userId?: string) => {
       const token = await getTokenWithDelay();
 
-      // Get user ID from token if not provided
-      let effectiveUserId = userId;
-      if (!effectiveUserId) {
-        const tokenUserId = getUserIdFromToken();
-        if (!tokenUserId) {
-          throw new Error('User ID is required to delete a task');
-        }
-        effectiveUserId = tokenUserId;
-      }
-
-      // Ensure userId is properly formatted (trim any whitespace)
-      if (!effectiveUserId) {
+      // Always get user ID from token to ensure we're accessing the correct user's data
+      const tokenUserId = getUserIdFromToken();
+      if (!tokenUserId) {
         throw new Error('User ID is required to delete a task');
       }
-      const cleanUserId = effectiveUserId.trim();
+      const cleanUserId = tokenUserId.trim();
       const url = `${process.env.NEXT_PUBLIC_API_URL}/api/${cleanUserId}/tasks/${id}`;
       console.log(`Deleting task with URL: ${url}`);
 
@@ -228,21 +183,12 @@ const apiService = {
     toggleComplete: async (id: number, completed: boolean, userId?: string) => {
       const token = await getTokenWithDelay();
 
-      // Get user ID from token if not provided
-      let effectiveUserId = userId;
-      if (!effectiveUserId) {
-        const tokenUserId = getUserIdFromToken();
-        if (!tokenUserId) {
-          throw new Error('User ID is required to toggle task completion');
-        }
-        effectiveUserId = tokenUserId;
-      }
-
-      // Ensure userId is properly formatted (trim any whitespace)
-      if (!effectiveUserId) {
+      // Always get user ID from token to ensure we're accessing the correct user's data
+      const tokenUserId = getUserIdFromToken();
+      if (!tokenUserId) {
         throw new Error('User ID is required to toggle task completion');
       }
-      const cleanUserId = effectiveUserId.trim();
+      const cleanUserId = tokenUserId.trim();
 
       if (!token) {
         throw new Error('Authentication token is missing. Please log in again.');
@@ -266,21 +212,12 @@ const apiService = {
     getSubtasks: async (taskId: number, userId?: string) => {
       const token = await getTokenWithDelay();
 
-      // Get user ID from token if not provided
-      let effectiveUserId = userId;
-      if (!effectiveUserId) {
-        const tokenUserId = getUserIdFromToken();
-        if (!tokenUserId) {
-          throw new Error('User ID is required to get subtasks');
-        }
-        effectiveUserId = tokenUserId;
-      }
-
-      // Ensure userId is properly formatted (trim any whitespace)
-      if (!effectiveUserId) {
+      // Always get user ID from token to ensure we're accessing the correct user's data
+      const tokenUserId = getUserIdFromToken();
+      if (!tokenUserId) {
         throw new Error('User ID is required to get subtasks');
       }
-      const cleanUserId = effectiveUserId.trim();
+      const cleanUserId = tokenUserId.trim();
 
       if (!token) {
         throw new Error('Authentication token is missing. Please log in again.');
