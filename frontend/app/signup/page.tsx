@@ -47,7 +47,7 @@ const IntegratedBackground = () => {
       vy: (Math.random() - 0.5) * 0.3,
       radius: Math.random() * 100 + 200,
       color: Math.random() > 0.5 ? pinkColor : whiteColor,
-      alpha: 0.15 // Opacity barha di
+      alpha: 0.15 
     }));
 
     // 3. Network Particles
@@ -61,11 +61,9 @@ const IntegratedBackground = () => {
     }));
 
     const draw = () => {
-      // Dark Base Layer
       ctx.fillStyle = '#09090b'; 
       ctx.fillRect(0, 0, width, height);
 
-      // Layer 1: Giant Bolls
       giantBolls.forEach(g => {
         g.x += g.vx; g.y += g.vy;
         if (g.x < -g.radius) g.x = width + g.radius;
@@ -80,17 +78,15 @@ const IntegratedBackground = () => {
         ctx.beginPath(); ctx.arc(g.x, g.y, g.radius, 0, Math.PI * 2); ctx.fill();
       });
 
-      // Layer 2: Matrix Bars
       bars.forEach(bar => {
         ctx.fillStyle = pinkColor;
-        ctx.globalAlpha = 0.1; // Increased for visibility
+        ctx.globalAlpha = 0.1; 
         ctx.fillRect(bar.x, bar.y, bar.width, bar.length);
         ctx.globalAlpha = 1.0;
         bar.y += bar.speed;
         if (bar.y > height) bar.y = -bar.length;
       });
 
-      // Layer 3: Network
       for (let i = 0; i < particles.length; i++) {
         const p1 = particles[i];
         p1.x += p1.vx; p1.y += p1.vy;
@@ -139,7 +135,7 @@ const IntegratedBackground = () => {
         left: 0,
         width: '100vw',
         height: '100vh',
-        zIndex: -1, // Peeche rakha hai
+        zIndex: -1,
         pointerEvents: 'none',
         background: '#09090b'
       }}
@@ -152,7 +148,6 @@ const IntegratedBackground = () => {
    ========================================================== */
 export default function SignupPage() {
   const router = useRouter();
-  const { refetch } = useSession(); 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -175,6 +170,7 @@ export default function SignupPage() {
     setLoading(true);
     setError('');
 
+    // Step 1: Sirf Signup call karein
     const result = await authClient.signUp({
       email: formData.email,
       password: formData.password,
@@ -185,40 +181,16 @@ export default function SignupPage() {
       setError(result.error.message || "Signup failed. Please try again.");
       setLoading(false);
     } else {
-      // Clear any old auth data before setting up new session
-      localStorage.removeItem('auth-token');
-      sessionStorage.clear();
-
-      // After successful signup, we need to log the user in
-      // Call the login API to get the authentication token
-      const loginResult = await authClient.signIn({
-        email: formData.email,
-        password: formData.password,
-      });
-
-      if (loginResult.error) {
-        setError(loginResult.error.message || "Login failed after signup. Please try logging in manually.");
-        setLoading(false);
-        return;
-      }
-
-      // Refetch the session to update the auth state
-      await refetch();
-
-      // Wait a bit longer to ensure auth state is fully updated
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Force a window reload to ensure all contexts are updated with the new user
-      window.location.href = '/dashboard';
+      // Step 2: Auto-login remove kar diya
+      // Ab ye user ko seedha login page par le jaye ga
+      router.push('/login');
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col relative font-sans">
-      {/* 🔹 Background Component is outside of everything, zIndex -1 */}
       <IntegratedBackground /> 
 
-      {/* 🔹 Content Layer with bg-transparent taake background dikhe */}
       <div className="flex-1 flex items-center justify-center p-6 relative z-10 bg-transparent">
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}

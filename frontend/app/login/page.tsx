@@ -8,11 +8,8 @@ import { SparklesIcon, LockIcon, MailIcon, ArrowRightIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { authClient, useSession } from "@/lib/auth"; // Better Auth Client
+import { authClient, useSession } from "@/lib/auth"; 
 
-/* ==========================================================
-   ✅ ANIMATED BACKGROUND (Matrix Vertical Bars Only)
-   ========================================================== */
 const MatrixBarsBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -29,19 +26,17 @@ const MatrixBarsBackground = () => {
     const pinkColor = '#f789ae';
     const whiteColor = '#FFFFFF';
 
-    // Image jaisi thick aur thin lines define karna
     const lines = Array.from({ length: 60 }, () => ({
       x: Math.random() * width,
       y: Math.random() * -height,
-      length: 100 + Math.random() * 250, // Lambi lines
-      speed: 1.5 + Math.random() * 3,   // Scrolling speed
-      width: 1 + Math.random() * 3,     // Thickness variety
+      length: 100 + Math.random() * 250, 
+      speed: 1.5 + Math.random() * 3,   
+      width: 1 + Math.random() * 3,     
       color: Math.random() > 0.5 ? pinkColor : whiteColor,
       opacity: 0.1 + Math.random() * 0.4
     }));
 
     const draw = () => {
-      // Trail effect ke liye halka clear
       ctx.fillStyle = 'rgba(9, 9, 11, 0.2)'; 
       ctx.fillRect(0, 0, width, height);
 
@@ -50,13 +45,10 @@ const MatrixBarsBackground = () => {
         ctx.strokeStyle = line.color;
         ctx.lineWidth = line.width;
         ctx.globalAlpha = line.opacity;
-        
-        // Vertical Bar drawing
         ctx.moveTo(line.x, line.y);
         ctx.lineTo(line.x, line.y + line.length);
         ctx.stroke();
 
-        // Movement logic
         line.y += line.speed;
         if (line.y > height) {
           line.y = -line.length;
@@ -91,12 +83,9 @@ const MatrixBarsBackground = () => {
   );
 };
 
-/* ==========================================================
-   ✅ MAIN LOGIN PAGE COMPONENT
-   ========================================================== */
 export default function LoginPage() {
   const router = useRouter();
-  const { refetch } = useSession(); // Get the refetch function
+  const { refetch } = useSession(); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -107,42 +96,32 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
 
-    // Custom Auth Login Flow
-    const result = await authClient.signIn({
-      email,
-      password,
-    });
-
-    if (result.error) {
-      setError(result.error.message || "Login failed. Check your credentials.");
-      setLoading(false);
-    } else {
-      // Clear any old auth data before setting up new session
+    try {
+      // 1. Purana session clear karein taake ID mix-up na ho
       localStorage.removeItem('auth-token');
       sessionStorage.clear();
 
-      // Store the token in localStorage if not already stored by the auth API
-      if (result.token) {
-        localStorage.setItem('auth-token', result.token);
+      // 2. Login Call
+      const result = await authClient.signIn({ email, password });
+
+      // 3. Error Handling (TypeScript Check Fixed)
+      if (result.error) {
+        setError(result.error.message);
+        setLoading(false);
+      } else {
+        // 4. Kamyabi! Dashboard ki taraf bhejien
+        await refetch();
+        window.location.href = '/dashboard';
       }
-
-      // Refetch the session to update the auth state
-      await refetch();
-
-      // Wait a bit longer to ensure auth state is fully updated
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Force a window redirect to ensure all contexts are updated with the new user
-      window.location.href = '/dashboard';
-    }
+    } catch (err) {
+      setError("Login failed due to a server error.");
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-zinc-950 flex flex-col relative overflow-hidden font-sans">
-      {/* 🔹 Matrix Lines Background Only (Bolls Removed) */}
       <MatrixBarsBackground /> 
-
       <div className="flex-1 flex items-center justify-center p-6 relative z-10">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -178,14 +157,12 @@ export default function LoginPage() {
                     <MailIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-600 group-focus-within:text-[#F06292] transition-colors" />
                     <Input
                       id="loginEmail"
-                      name="email"
                       type="email"
                       placeholder="Email Address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      autoComplete="email"
-                      className="bg-zinc-950/50 border-zinc-800/50 rounded-2xl pl-12 h-14 text-white focus:border-[#F06292] transition-all outline-none"
+                      className="bg-zinc-950/50 border-zinc-800/50 rounded-2xl pl-12 h-14 text-white focus:border-[#F06292] outline-none"
                     />
                   </div>
                 </div>
@@ -196,14 +173,12 @@ export default function LoginPage() {
                     <LockIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-600 group-focus-within:text-[#F06292] transition-colors" />
                     <Input
                       id="loginPassword"
-                      name="password"
                       type="password"
                       placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      autoComplete="current-password"
-                      className="bg-zinc-950/50 border-zinc-800/50 rounded-2xl pl-12 h-14 text-white focus:border-[#F06292] transition-all outline-none"
+                      className="bg-zinc-950/50 border-zinc-800/50 rounded-2xl pl-12 h-14 text-white focus:border-[#F06292] outline-none"
                     />
                   </div>
                 </div>
@@ -211,7 +186,7 @@ export default function LoginPage() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-[#F06292]/70 to-[#FFFFFF]/90 text-black h-14 rounded-2xl transition-all text-lg font-bold hover:from-[#F06292] hover:to-white hover:opacity-90 btn-shine-effect"
+                  className="w-full bg-gradient-to-r from-[#F06292]/70 to-[#FFFFFF]/90 text-black h-14 rounded-2xl transition-all text-lg font-bold hover:from-[#F06292] hover:to-white"
                 >
                   {loading ? (
                     <div className="w-6 h-6 border-4 border-black border-t-transparent rounded-full animate-spin mx-auto" />
@@ -223,18 +198,13 @@ export default function LoginPage() {
             </CardContent>
           </Card>
 
-          {/* Helper Links */}
-          <div className="mt-8 text-center space-y-4">
+          <div className="mt-8 text-center">
             <p className="text-zinc-300 text-xl font-medium">
               Don't have an account?{" "}
               <Link href="/signup" className="text-[#F06292] hover:underline font-bold transition-all">
                 Create one now
               </Link>
             </p>
-            <div className="pt-4 border-t border-zinc-900 flex justify-center gap-6">
-              <span className="text-[20px] font-black uppercase tracking-widest text-zinc-400">Privacy</span>
-              <span className="text-[20px] font-black uppercase tracking-widest text-zinc-400">Productivity</span>
-            </div>
           </div>
         </motion.div>
       </div>
