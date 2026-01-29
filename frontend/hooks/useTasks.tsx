@@ -174,8 +174,13 @@ export const useTasks = (): UseTasksReturn => {
   };
 
   useEffect(() => {
-    if (isAuthenticated) fetchTasks();
-  }, [isAuthenticated, fetchTasks]);
+    // Only fetch tasks when user is authenticated and user ID is available
+    if (isAuthenticated && user?.id) {
+      // Add a small delay to ensure token is available in localStorage
+      const timer = setTimeout(fetchTasks, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated, user?.id, fetchTasks]);
 
   // Return the current deletedCount from state
   return { tasks, loading, deletedCount, recentlyUpdatedTaskId, toggleTaskCompletion, deleteTask, updateTask, refetch: fetchTasks, fetchTaskSubtasks };
