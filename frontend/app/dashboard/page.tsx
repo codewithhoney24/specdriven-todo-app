@@ -51,14 +51,12 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // Only redirect if we're not loading and user is definitely not authenticated
-    // Add a small delay to ensure auth state is properly established
-    const timer = setTimeout(() => {
-      if (!authLoading && !isAuthenticated) {
+    // Wait for auth state to be fully loaded before checking
+    if (!authLoading) {
+      if (!isAuthenticated) {
         router.push('/login');
       }
-    }, 500);
-
-    return () => clearTimeout(timer);
+    }
   }, [isAuthenticated, authLoading, router]);
 
   const processedTasks = useMemo(() => {
@@ -114,10 +112,21 @@ export default function DashboardPage() {
     { label: 'Deleted', value: deletedCount, color: 'text-red-500' },
   ], [tasks, deletedCount]);
 
-  if (authLoading || tasksLoading) {
+  if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-950 text-[#F06292]">
         <div className="w-12 h-12 border-4 border-[#F06292] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (tasksLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-zinc-950 text-[#F06292]">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-[#F06292] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-[#F06292]">Loading your tasks...</p>
+        </div>
       </div>
     );
   }
