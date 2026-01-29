@@ -33,6 +33,7 @@ SQLModel.metadata.create_all(bind=engine)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+
         "https://specdriven-todo-app.vercel.app",
         "https://specdriven-todo-app-git-main-nousheen-atif.vercel.app",
         "https://specdriven-todo-6qthnh0kx-nousheen-atif.vercel.app",
