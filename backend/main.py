@@ -43,6 +43,7 @@ app.add_middleware(
         "http://127.0.0.1:3000",  # Alternative local dev
         "http://127.0.0.1:3001",  # Alternative local dev
         "https://vercel.app",     # General Vercel domain
+        "https://codewithhoney24-todo-task.hf.space",  # Hugging Face Space
         "*"  # Allow all origins for local development (be cautious in production)
     ],
     allow_credentials=True,
