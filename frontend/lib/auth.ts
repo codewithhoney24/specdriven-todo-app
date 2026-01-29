@@ -43,6 +43,8 @@ export const authAPI = {
   async signUp(userData: UserRegistration): Promise<{ user?: User; error?: { message: string } }> {
     try {
       console.log(`Attempting to register user at: ${API_BASE_URL}/api/auth/register`); // Debug log
+      console.log(`API_BASE_URL: ${API_BASE_URL}`); // Debug log
+      console.log(`NEXT_PUBLIC_API_URL: ${process.env.NEXT_PUBLIC_API_URL}`); // Debug log
 
       // Clear any existing auth tokens before attempting new registration
       localStorage.removeItem('auth-token');
@@ -55,12 +57,16 @@ export const authAPI = {
         body: JSON.stringify(userData),
       });
 
+      console.log(`Response status: ${response.status}`); // Debug log
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ detail: 'Registration failed' }));
+        console.error('Registration error response:', errorData); // Debug log
         throw new Error(errorData.detail || 'Registration failed');
       }
 
       const responseUserData = await response.json();
+      console.log('Registration response data:', responseUserData); // Debug log
 
       // Create a user object with the correct format
       const user: User = {
@@ -85,6 +91,8 @@ export const authAPI = {
   async signIn(credentials: UserLogin): Promise<{ user?: User; token?: string; error?: { message: string } }> {
     try {
       console.log(`Attempting to login user at: ${API_BASE_URL}/api/auth/login`); // Debug log
+      console.log(`API_BASE_URL: ${API_BASE_URL}`); // Debug log
+      console.log(`NEXT_PUBLIC_API_URL: ${process.env.NEXT_PUBLIC_API_URL}`); // Debug log
 
       // Clear any existing auth tokens before attempting new login
       localStorage.removeItem('auth-token');
@@ -97,8 +105,11 @@ export const authAPI = {
         body: JSON.stringify(credentials),
       });
 
+      console.log(`Response status: ${response.status}`); // Debug log
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ detail: 'Login failed' }));
+        console.error('Login error response:', errorData); // Debug log
         throw new Error(errorData.detail || 'Login failed');
       }
 
@@ -155,6 +166,9 @@ export const authAPI = {
       // First, try to get updated user data from the backend
       try {
         console.log(`Attempting to get current user at: ${API_BASE_URL}/api/users/me`); // Debug log
+        console.log(`API_BASE_URL: ${API_BASE_URL}`); // Debug log
+        console.log(`NEXT_PUBLIC_API_URL: ${process.env.NEXT_PUBLIC_API_URL}`); // Debug log
+
         const response = await fetch(`${API_BASE_URL}/api/users/me`, {
           method: 'GET',
           headers: {
@@ -162,6 +176,8 @@ export const authAPI = {
             'Authorization': `Bearer ${token}`
           }
         });
+
+        console.log(`Response status: ${response.status}`); // Debug log
 
         if (response.ok) {
           const userData = await response.json();
