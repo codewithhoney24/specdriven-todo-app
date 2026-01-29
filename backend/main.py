@@ -33,9 +33,10 @@ SQLModel.metadata.create_all(bind=engine)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://specdriven-todo-app-653i.vercel.app",  # Your Vercel deployment
-        "https://specdriven-todo-app.vercel.app",       # Alternative Vercel deployment
-        "https://specdriven-todo-app-7sei.vercel.app",  # Another Vercel deployment (from your error)
+        "https://specdriven-todo-app.vercel.app",
+        "https://specdriven-todo-85t6351yk-nousheen-atif.vercel.app",
+        "https://specdriven-todo-app-git-main-nousheen-atif.vercel.app",
+        "https://codewithhoney24-todo-task.hf.space",
         "http://localhost:3000",  # Local development
         "http://localhost:3001",  # Alternative local dev port
         "http://localhost:8000",  # Local backend for testing
