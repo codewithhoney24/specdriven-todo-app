@@ -43,6 +43,10 @@ export const authAPI = {
   async signUp(userData: UserRegistration): Promise<{ user?: User; error?: { message: string } }> {
     try {
       console.log(`Attempting to register user at: ${API_BASE_URL}/api/auth/register`); // Debug log
+
+      // Clear any existing auth tokens before attempting new registration
+      localStorage.removeItem('auth-token');
+
       const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
@@ -81,6 +85,10 @@ export const authAPI = {
   async signIn(credentials: UserLogin): Promise<{ user?: User; token?: string; error?: { message: string } }> {
     try {
       console.log(`Attempting to login user at: ${API_BASE_URL}/api/auth/login`); // Debug log
+
+      // Clear any existing auth tokens before attempting new login
+      localStorage.removeItem('auth-token');
+
       const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {

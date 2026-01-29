@@ -34,8 +34,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
 
-        "https://specdriven-todo-app.vercel.app",
-        
+    
+        "https://frontend-nousheen-atif.vercel.app",
+        "https://frontend-28ju7hx0q-nousheen-atif.vercel.app",
         "https://codewithhoney24-todo-task.hf.space",
         "http://localhost:3000",  # Local development
         "http://localhost:3001",  # Alternative local dev port
