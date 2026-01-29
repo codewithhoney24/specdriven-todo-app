@@ -14,6 +14,16 @@ from models import Task, Subtask
 # Create FastAPI app instance
 app = FastAPI(title="Todo Application API", version="1.0.0")
 
+# Add logging middleware to see incoming requests
+@app.middleware("http")
+async def log_requests(request, call_next):
+    print(f"Incoming request: {request.method} {request.url.path}")
+    if request.query_params:
+        print(f"Query params: {request.query_params}")
+    response = await call_next(request)
+    print(f"Response status: {response.status_code}")
+    return response
+
 # Initialize the database
 from sqlmodel import SQLModel
 from db import engine
