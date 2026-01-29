@@ -120,13 +120,13 @@ export default function LoginPage() {
       // Store the token in localStorage if not already stored by the auth API
       if (result.token) {
         localStorage.setItem('auth-token', result.token);
-
-        // Force a small delay to ensure token is stored before redirect
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Refetch the session to update the auth state
-        await refetch();
       }
+
+      // Refetch the session to update the auth state
+      await refetch();
+
+      // Small delay to ensure auth state is updated before redirect
+      await new Promise(resolve => setTimeout(resolve, 300));
 
       // Redirect to dashboard
       router.push('/dashboard');

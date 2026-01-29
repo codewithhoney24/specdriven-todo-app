@@ -185,7 +185,12 @@ export default function SignupPage() {
       setError(result.error.message || "Signup failed. Please try again.");
       setLoading(false);
     } else {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Refetch the session to update the auth state
+      await refetch();
+
+      // Small delay to ensure auth state is updated before redirect
+      await new Promise(resolve => setTimeout(resolve, 300));
+
       router.push('/dashboard');
     }
   };
