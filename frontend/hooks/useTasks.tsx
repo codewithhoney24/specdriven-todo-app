@@ -176,8 +176,8 @@ export const useTasks = (): UseTasksReturn => {
   useEffect(() => {
     // Only fetch tasks when user is authenticated and user ID is available
     if (isAuthenticated && user?.id) {
-      // Add a small delay to ensure token is available in localStorage
-      const timer = setTimeout(fetchTasks, 300);
+      // Add a slightly longer delay to ensure token is available in localStorage
+      const timer = setTimeout(fetchTasks, 800);
       return () => clearTimeout(timer);
     }
   }, [isAuthenticated, user?.id, fetchTasks]);

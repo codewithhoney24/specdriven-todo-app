@@ -51,9 +51,14 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // Only redirect if we're not loading and user is definitely not authenticated
-    if (!authLoading && !isAuthenticated) {
-      router.push('/login');
-    }
+    // Add a small delay to ensure auth state is properly established
+    const timer = setTimeout(() => {
+      if (!authLoading && !isAuthenticated) {
+        router.push('/login');
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [isAuthenticated, authLoading, router]);
 
   const processedTasks = useMemo(() => {
