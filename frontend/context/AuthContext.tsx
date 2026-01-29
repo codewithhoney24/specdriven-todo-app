@@ -23,7 +23,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     refetch: async () => {},
   });
 
-  const { data: session, isPending } = useSession();
+  const { data: session, isPending, refetch } = useSession();
+
+  // Effect to handle changes in localStorage for auth-token
+  useEffect(() => {
+    const handleStorageChange = () => {
+      // When auth token is added/removed from localStorage, refetch session
+      refetch();
+    };
+
+    // Listen for changes to auth-token in localStorage
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [refetch]);
 
   useEffect(() => {
     // Always set loading to true when starting to fetch user data
@@ -81,7 +96,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }));
       }
     }
-  }, [session, isPending]);
+  }, [session, isPending, refetch]);
 
   const handleLogout = async () => {
     try {
