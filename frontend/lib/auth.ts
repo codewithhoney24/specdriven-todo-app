@@ -154,6 +154,7 @@ export const authAPI = {
   async signOut(): Promise<void> {
     // Clear stored token/session
     localStorage.removeItem('auth-token');
+    console.log('Auth token cleared from localStorage');
   },
 
   async getCurrentUser(): Promise<User | null> {

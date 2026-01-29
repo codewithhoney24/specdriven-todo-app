@@ -102,8 +102,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const handleLogout = async () => {
     try {
-      await signOut();
-      localStorage.removeItem('auth-token'); // Also remove token from localStorage
+      await signOut(); // This should already clear the token
+      // Explicitly clear the token again to ensure it's removed
+      localStorage.removeItem('auth-token');
+      console.log('Auth token cleared during logout');
       setAuthState({
         user: null,
         loading: false,
