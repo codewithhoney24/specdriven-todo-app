@@ -50,6 +50,7 @@ export default function DashboardPage() {
   }, [recentlyUpdatedTaskId]);
 
   useEffect(() => {
+    // Only redirect if we're not loading and user is definitely not authenticated
     if (!authLoading && !isAuthenticated) {
       router.push('/login');
     }
