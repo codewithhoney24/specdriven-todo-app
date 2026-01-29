@@ -1,11 +1,10 @@
 // next.config.js
 /** @type {import('next').NextConfig} */
 
-// For monorepo setups with multiple package-lock.json files
-// This is a multi-app workspace, so the warning is expected but harmless
+// Configuration to handle the multi-package setup
 const nextConfig = {
-  // Suppress the workspace root inference warning by explicitly acknowledging
-  // this is a legitimate multi-app workspace setup
+  // Disable the warning about multiple lockfiles by explicitly acknowledging the setup
+  // This is a common setup for monorepos where both root and app have package managers
 };
 
 export default nextConfig;
