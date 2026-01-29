@@ -70,6 +70,9 @@ const apiService = {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/${cleanUserId}/tasks`, {
           headers: {
             'Authorization': `Bearer ${token}`,
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
           },
         });
         return response;
@@ -96,6 +99,9 @@ const apiService = {
         return await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/${cleanUserId}/tasks/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
           },
         });
       } catch (error: any) {
@@ -121,6 +127,9 @@ const apiService = {
         return await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/${cleanUserId}/tasks`, taskData, {
           headers: {
             'Authorization': `Bearer ${token}`,
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
           },
         });
       } catch (error: any) {
@@ -146,6 +155,9 @@ const apiService = {
         return await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/${cleanUserId}/tasks/${id}`, taskData, {
           headers: {
             'Authorization': `Bearer ${token}`,
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
           },
         });
       } catch (error: any) {
@@ -173,6 +185,9 @@ const apiService = {
         return await axios.delete(url, {
           headers: {
             'Authorization': `Bearer ${token}`,
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
           },
         });
       } catch (error: any) {
@@ -200,6 +215,9 @@ const apiService = {
           {
             headers: {
               'Authorization': `Bearer ${token}`,
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0'
             },
           }
         );
@@ -227,6 +245,9 @@ const apiService = {
         return await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/${cleanUserId}/tasks/${taskId}/subtasks`, {
           headers: {
             'Authorization': `Bearer ${token}`,
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
           },
         });
       } catch (error: any) {
