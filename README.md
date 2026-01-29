@@ -36,6 +36,32 @@ Set the environment variable in your local `.env.local` file:
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
+## Fresh Deployment (Recommended)
+
+If you're starting fresh or the previous deployment was deleted, use the complete deployment script:
+
+1. **Install Vercel CLI** (if not already installed):
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Log in to your Vercel account**:
+   ```bash
+   vercel login
+   ```
+
+3. **Run the complete deployment script**:
+   ```bash
+   # On Linux/Mac:
+   chmod +x deploy_complete_app.sh
+   ./deploy_complete_app.sh
+
+   # On Windows:
+   deploy_complete_app.bat
+   ```
+
+This script will deploy both the backend and frontend, automatically configure the API URL, and provide you with the deployment URLs for both.
+
 ## Architecture
 
 - **Frontend**: Next.js 16+ application with Tailwind CSS and Better Auth

@@ -35,10 +35,7 @@ app.add_middleware(
     allow_origins=[
 
         "https://specdriven-todo-app.vercel.app",
-        "https://specdriven-todo-app-git-main-nousheen-atif.vercel.app",
-        "https://specdriven-todo-6qthnh0kx-nousheen-atif.vercel.app",
-        "https://specdriven-todo-85t6351yk-nousheen-atif.vercel.app",
-        "https://specdriven-todo-5l62lvxgk-nousheen-atif.vercel.app",
+        
         "https://codewithhoney24-todo-task.hf.space",
         "http://localhost:3000",  # Local development
         "http://localhost:3001",  # Alternative local dev port
