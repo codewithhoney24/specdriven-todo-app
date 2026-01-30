@@ -37,6 +37,8 @@ app.add_middleware(
     
         "https://frontend-nousheen-atif.vercel.app",
         "https://frontend-28ju7hx0q-nousheen-atif.vercel.app",
+        "https://frontend-562i1z9z4-nousheen-atif.vercel.app",
+        "https://frontend-562i1z9z4-nousheen-atif.vercel.app/",
         "https://codewithhoney24-todo-task.hf.space",
         "http://localhost:3000",  # Local development
         "http://localhost:3001",  # Alternative local dev port
