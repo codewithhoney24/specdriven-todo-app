@@ -183,7 +183,8 @@ export default function SignupPage() {
     } else {
       // Step 2: Auto-login remove kar diya
       // Ab ye user ko seedha login page par le jaye ga
-      router.push('/login');
+      // Redirect to login instead of auto-dashboard to ensure proper authentication flow
+      window.location.href = '/login';
     }
   };
 
