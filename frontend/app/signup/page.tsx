@@ -182,7 +182,7 @@ export default function SignupPage() {
       setLoading(false);
     } else {
       // Step 2: Auto-login remove kar diya
-      // Ab ye user ko seedha login page par le jaye ga
+      // Ab ye user ko seedha login page par le jaye ga or wahan se wo apne credentials se login kar sakta hai
       router.push('/login');
     }
   };
